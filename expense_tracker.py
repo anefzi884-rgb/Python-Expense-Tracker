@@ -1,59 +1,62 @@
 
+
 expenses = []
 
-
 def add_expense():
-    description = input("Enter expense description: ")
-    try:
-        amount = float(input("Enter expense amount: "))
-        if amount <= 0:
-            print("Amount must be positive.")
-            return
-        expenses.append({
-            "description": description,
-            "amount": amount
-        })
-        print("Expense added successfully.")
-    except ValueError:
-        print("Invalid amount.")
-
+    name = input("Enter expense name: ")
+    amount = float(input("Enter amount: "))
+    expenses.append({"name": name, "amount": amount})
+    print("Expense added successfully!")
 
 def show_expenses():
     if not expenses:
         print("No expenses recorded.")
         return
 
-    for number, expense in enumerate(expenses, start=1):
-        print(f"{number}. {expense['description']} - {expense['amount']:.2f}")
-
+    for i, expense in enumerate(expenses, start=1):
+        print(f"{i}. {expense['name']} - {expense['amount']:.2f}")
 
 def show_total():
-    total = sum(item["amount"] for item in expenses)
+    total = sum(expense["amount"] for expense in expenses)
     print(f"Total expenses: {total:.2f}")
 
+def delete_expense():
+    if not expenses:
+        print("No expenses to delete.")
+        return
 
-def main():
-    while True:
-        print("\n===== EXPENSE TRACKER =====")
-        print("1. Add an expense")
-        print("2. Show expenses")
-        print("3. Show total")
-        print("4. Exit")
+    show_expenses()
 
-        choice = input("Choose an option: ")
+    try:
+        number = int(input("Enter expense number to delete: "))
 
-        if choice == "1":
-            add_expense()
-        elif choice == "2":
-            show_expenses()
-        elif choice == "3":
-            show_total()
-        elif choice == "4":
-            print("Goodbye!")
-            break
+        if 1 <= number <= len(expenses):
+            deleted = expenses.pop(number - 1)
+            print(f"{deleted['name']} deleted successfully!")
         else:
-            print("Invalid choice.")
+            print("Invalid expense number.")
+    except ValueError:
+        print("Please enter a valid number.")
 
+while True:
+    print("\n===== EXPENSE TRACKER =====")
+    print("1. Add an expense")
+    print("2. Show expenses")
+    print("3. Show total")
+    print("4. Exit")
+    print("5. Delete an expense")
 
-if __name__ == "__main__":
-    main()
+    choice = input("Choose an option: ")
+
+    if choice == "1":
+        add_expense()
+    elif choice == "2":
+        show_expenses()
+    elif choice == "3":
+        show_total()
+    elif choice == "4":
+        break
+    elif choice == "5":
+        delete_expense()
+    else:
+        print("Invalid choice.")
