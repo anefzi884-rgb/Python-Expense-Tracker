@@ -1,46 +1,89 @@
+"""Expense Tracker - TP3: fusion des branches et Pull Requests.
+
+Les dépenses sont conservées en mémoire pendant l'exécution du programme.
+"""
 
 expenses = []
 
 
 def add_expense():
-    description = input("Enter expense description: ")
+    """Ajoute une dépense à la liste."""
+    name = input("Expense name: ").strip()
+    if not name:
+        print("Expense name cannot be empty.")
+        return
+
     try:
-        amount = float(input("Enter expense amount: "))
+        amount = float(input("Amount: "))
         if amount <= 0:
-            print("Amount must be positive.")
+            print("Amount must be greater than zero.")
             return
-        expenses.append({
-            "description": description,
-            "amount": amount
-        })
-        print("Expense added successfully.")
     except ValueError:
-        print("Invalid amount.")
+        print("Please enter a valid amount.")
+        return
+
+    expenses.append({"name": name, "amount": amount})
+    print("Expense added successfully.")
 
 
 def show_expenses():
+    """Affiche toutes les dépenses."""
     if not expenses:
-        print("No expenses recorded.")
+        print("No expenses found.")
         return
 
+    print("\n===== EXPENSES =====")
     for number, expense in enumerate(expenses, start=1):
-        print(f"{number}. {expense['description']} - {expense['amount']:.2f}")
+        print(f"{number}. {expense['name']} : {expense['amount']:.2f}")
 
 
 def show_total():
-    total = sum(item["amount"] for item in expenses)
-    print(f"Total expenses: {total:.2f}")
+    """Affiche le montant total des dépenses."""
+    total = sum(expense["amount"] for expense in expenses)
+    print(f"Total: {total:.2f}")
+
+
+def delete_expense():
+    """Supprime une dépense en utilisant son numéro."""
+    if not expenses:
+        print("No expenses to delete.")
+        return
+
+    show_expenses()
+    try:
+        number = int(input("Enter the expense number to delete: "))
+        if number < 1 or number > len(expenses):
+            print("Invalid expense number.")
+            return
+    except ValueError:
+        print("Please enter a valid number.")
+        return
+
+    deleted = expenses.pop(number - 1)
+    print(f"{deleted['name']} deleted successfully.")
+
+
+def show_average():
+    """Affiche la moyenne des dépenses."""
+    if not expenses:
+        print("No expenses available to calculate the average.")
+        return
+
+    average = sum(expense["amount"] for expense in expenses) / len(expenses)
+    print(f"Average: {average:.2f}")
 
 
 def main():
     while True:
         print("\n===== EXPENSE TRACKER =====")
         print("1. Add an expense")
-        print("2. Show expenses")
+        print("2. View expenses")
         print("3. Show total")
         print("4. Exit")
+        print("5. Delete an expense")
+        print("6. Show average")
 
-        choice = input("Choose an option: ")
+        choice = input("Choose an option: ").strip()
 
         if choice == "1":
             add_expense()
@@ -51,8 +94,12 @@ def main():
         elif choice == "4":
             print("Goodbye!")
             break
+        elif choice == "5":
+            delete_expense()
+        elif choice == "6":
+            show_average()
         else:
-            print("Invalid choice.")
+            print("Invalid option.")
 
 
 if __name__ == "__main__":
